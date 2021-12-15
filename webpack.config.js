@@ -1,8 +1,8 @@
 const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
-// const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
-// const WebpackPwaManifest = require("webpack-pwa-manifest");
+const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
+ const WebpackPwaManifest = require("webpack-pwa-manifest");
 const path = require('path');
 
 const config = {
@@ -42,6 +42,7 @@ const config = {
       }
     ]
   },
+  // new keyword invokes a constructor function
   plugins: [
     new webpack.ProvidePlugin({
       $: 'jquery',
@@ -49,21 +50,26 @@ const config = {
     }),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static'
+    }),
+    new WebpackPwaManifest({
+      name: "Food Event",
+      short_name: "Foodies",
+      description: "An app that allows you to view upcoming food events.",
+      start_url: "../index.html", //to specify the homepage for the PWA relative to the location of the manifest file 
+  background_color: "#01579b",
+  theme_color: "#ffffff",
+      fingerprints: false,
+      // Fingerprints tell webpack whether or not it should generate unique fingerprints so that each time a new manifest is generated, it looks like this: manifest.lhge325d.json. Because we do not want this feature, we set fingerprints to be false.
+      inject: false,
+      // The inject property determines whether the link to the manifest.json is added to the HTML. Because we are not using fingerprints, we can also set inject to be false. 
+      
+      // sizes of the icons 
+      icons: [{
+        src: path.resolve("assets/img/icons/icon-512x512.png"),
+        sizes: [96, 128, 192, 256, 384, 512],
+        destination: path.join("assets", "icons")
+      }]
     })
-    // new WebpackPwaManifest({
-    //   name: "Food Event",
-    //   short_name: "Foodies",
-    //   description: "An app that allows you to view upcoming food events.",
-    //   background_color: "#01579b",
-    //   theme_color: "#ffffff",
-    //   fingerprints: false,
-    //   inject: false,
-    //   icons: [{
-    //     src: path.resolve("assets/img/icons/icon-512x512.png"),
-    //     sizes: [96, 128, 192, 256, 384, 512],
-    //     destination: path.join("assets", "icons")
-    //   }]
-    // })
   ],
   mode: 'development'
 };
